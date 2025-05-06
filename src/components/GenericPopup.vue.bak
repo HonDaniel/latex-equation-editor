@@ -1,0 +1,49 @@
+<template>
+  <div class="popup">
+    <div class="popup-content">
+      <h3>{{ title }}</h3>
+      <div v-for="(field, index) in fields" :key="index" class="popup-field">
+        <label :for="`input-${index}`">{{ field.label }}</label>
+        <input
+          :id="`input-${index}`"
+          v-model="field.value"
+          :placeholder="field.placeholder || ''"
+        />
+      </div>
+      <div class="popup-buttons">
+        <button @click="submitValues">Submit</button>
+        <button @click="$emit('close-popup')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    title: {
+      type: String,
+      default: "Input Values",
+    },
+    fields: {
+      type: Array,
+      required: true,
+      // Example format:
+      // [
+      //   { label: "Numerator", placeholder: "Enter numerator", value: "" },
+      //   { label: "Denominator", placeholder: "Enter denominator", value: "" }
+      // ]
+    },
+  },
+	methods: {
+  submitValues() {
+    const values = this.fields.map((field) => field.value.trim()); // Collect all field values
+    if (values.some((val) => val === "")) {
+      alert("All fields must be filled out!");
+      return;
+    }
+    this.$emit("submit", values); // Emit the collected values to the parent
+	},
+	},	
+};
+</script>
